@@ -2,6 +2,7 @@
 #include <vector>
 #include <ctime>
 #include <list>
+#include <string>
 
 using namespace std;
 
@@ -16,6 +17,10 @@ string LoginOrCreateAccount;
 string AccountLoginType;
 string AccountTypeChoice;
 
+
+
+
+
 //=====================================================      CLASSES AND SUB CLASSES     =====================================================      
 
 
@@ -29,14 +34,13 @@ public:
 		string BookTitle;
 		string BookAuthor;
 		bool borrowed = false;
-		bool reserved = false;
-		string RentedBy;
+		string RentedBy = "none";
 		
 
 		void PrintInfo()
 		{
 			cout << "BookTitle: " << BookTitle << ": :" << "Author: " << BookAuthor << ": :" <<"ID Number: " << BookIDNumber << ": :";
-			if (borrowed or reserved == true) 
+			if (borrowed == true) 
 			{
 				cout << "Unavalable" << endl;
 
@@ -47,15 +51,27 @@ public:
 			}
 
 		}
-		
+		void PrintReportInfo() 
+		{
+			cout << "BookTitle: " << BookTitle << ": :" << "Author: " << BookAuthor << ": :" << "ID Number: " << BookIDNumber << ": :" << RentedBy;
+			if (borrowed == true)
+			{
+				cout << "Unavalable" << endl;
+
+			}
+			else
+			{
+				cout << "Avalable" << endl;
+			}
+
+		}
 
 
 };
 
-void CreateBook() 
-{
 
-}
+
+
 
 
 
@@ -131,37 +147,17 @@ class Admin : public User
 			return 3;
 		}
 
-	void MannageAccouts() 
-	{
-		
-
-	}
+	
 
 };
 
 //===================================================      VECTOR LIBRARIES      ===================================================      
 
+//===================================================       MAIN SYSTEM FUNCTIONS        ===================================================      
 std::vector<Customer*> customers;
 std::vector<Librarian*> librarians;
 std::vector<Admin*> admins;
 std::vector<Books*> books;
-
-//===================================================       MAIN SYSTEM FUNCTIONS        ===================================================      
-
-
-void UserInfo(User*user) 
-{
-	string choice;
-	cout << CLEAR;
-	cout << "-- User Info --" << endl;
-	cout << "username: " << user->Username << endl;
-	cout << "passowrd: " << user->GetPassword() << endl;
-	cout << " books currently borrowed: " << user->NumberOfBooksRented << endl;
-	cin >> choice;
-	return;
-
-
-}
 
 Books* GetBookIDNumber(string IDNumber) 
 {
@@ -179,9 +175,59 @@ Books* GetBookIDNumber(string IDNumber)
 	return nullptr;
 }
 
+
+void CreateBook() 
+{
+	string Title;
+	string Author;
+	string IDnum;
+	cout << "-- Book creation --" << endl;
+	cout << "please enter the title of the book you wish to add to the system ";cin >> Title;
+	cin.ignore();
+	cout << "please enter the Author of the book you wish to add to the system ";cin >> Author;
+	cin.ignore();
+	cout << "please enter a new ID number for this book ";cin >> IDnum;
+	Books* Excisting = GetBookIDNumber(IDnum);
+	if (Excisting != nullptr)
+	{
+		cout << CLEAR;
+		cout << "sorry but a book with this ID number already excists, please choose a new ID number" << endl;
+		CreateBook();
+	}
+	else 
+	{
+		string choice;
+		Books* book = new Books();
+		book->BookIDNumber = IDnum;
+		book->BookTitle = Title;
+		book->BookAuthor = Author;
+		books.push_back(book);
+		
+		cout << "Book sucesfully created, press any button to return to admin screen" << endl;
+		cin >> choice;
+	}
+}
+
+void UserInfo(User*user) 
+{
+	string choice;
+	cout << CLEAR;
+	cout << "-- User Info --" << endl;
+	cout << "username: " << user->Username << endl;
+	cout << "passowrd: " << user->GetPassword() << endl;
+	cout << " books currently borrowed: " << user->NumberOfBooksRented << endl;
+	cin >> choice;
+	return;
+
+
+}
+
+
+
 void ReturnBooks(User* user) 
 {
 	cout << CLEAR;
+	cout << "-- Currently borrowed books--";
 	bool FoundBook = false;
 	for (int i = 0; i < books.size(); i++) 
 	{
@@ -461,7 +507,21 @@ void RentBook(User* user)
 
 	
 //====================================================================================================================================
+	void MannageAccounts() 
+	{
 
+
+	}
+	void RemoveAccounts() 
+	{
+
+
+	}
+	void GenerateReports() 
+	{
+
+
+	}
 
 
 void MainSystem(User*user) 
@@ -486,9 +546,6 @@ void MainSystem(User*user)
 		if (CustomerAccount == true)
 		{
 			string option;
-
-
-
 			cout << CLEAR;
 			cout << "--Main System--" << endl;
 			cout << "1. Rent book" << endl;
@@ -500,32 +557,110 @@ void MainSystem(User*user)
 			{
 				cout << CLEAR;
 				RentBook(user);
+				MainSystem(user);
 
 
 			}
 			else if (option == "2")
 			{
+				cout << CLEAR;
 				ReturnBooks(user);
+				MainSystem(user);
 
 			}
 			else if (option == "3")
 			{
+				cout << CLEAR;
 				UserInfo(user);
+				MainSystem(user);
 
 			}
 			else if (option == "4")
 			{
-
+				cout << CLEAR;
+				CustomerAccount = false;
 				return;
 			}
 			else
 			{
+				cout << "please enter a valid option" << endl;
+				MainSystem(user);
 
 
 			}
 
 		}
+		else if (LibrarianAccount == true) 
+		{
+			string choice;
+			cout << CLEAR;
+			cout << "-- Librarian main system --" << endl;
+			cout << "1. Create Book" << endl;
+			cout << "2. remove book" << endl;
+			cout << "3. generate report" << endl;
+			cout << "4. Log out" << endl;
+			cin >> choice;
 
+			if (choice == "1") 
+			{
+				cout << CLEAR;
+				CreateBook();
+				MainSystem(user);
+
+
+			}
+			else if (choice == "2") 
+			{
+				cout << CLEAR;
+				MainSystem(user);
+			}
+			else if (choice == "3") 
+			{
+				cout << CLEAR;
+				GenerateReport();
+				MainSystem(user);
+					
+			}
+			else if (choice == "4") 
+			{
+				cout << CLEAR;
+				LibrarianAccount = false;
+				return;
+
+			}
+		}
+		else if (AdminAccount == true) 
+		{
+			string choice;
+			cout << "-- Admin main system --" << endl;
+			cout << "1. Manage accounts " << endl;
+			cout << "2. Create accounts " << endl;
+			cout << "3. Log out" << endl;
+			cin >> choice;
+
+			if (choice == "1") 
+			{
+				cout << CLEAR;
+				MannageAccounts();
+				MainSystem(user);
+
+			}
+			else if (choice == "2") 
+			{
+				cout << CLEAR;
+				RemoveAccounts();
+				MainSystem(user);
+
+			}
+			else if (choice == "3") 
+			{
+				cout << CLEAR;
+				AdminAccount == false;
+				return;
+
+			}
+
+		}
 	}
 }
 
@@ -603,7 +738,9 @@ void CustomerLogin()
 	}
 	else  
 	{
+		cout << CLEAR;
 		MainSystem(customer);
+		
 
 	}
 
@@ -615,13 +752,63 @@ void CustomerLogin()
 void CreateLibrarianAccount() 
 {
 	
+	string choice;
+	string Username;
+	string Password;
+	cout << CLEAR;
+	cout << "--Librarian account creation--" << endl;
+	cout << "Please enter username "; cin >> Username;
+	cout << "please enter password "; cin >> Password;
+	
+	Librarian* librarian = new Librarian();
+	librarian->Username = Username;
+	librarian -> SetPassword(Password);
+	librarians.push_back(librarian);
 
+	cout << "user created" << endl;
+	cin >> choice;
 
+}
+
+Librarian* getLibrarian(string LoginUsername, string LoginPassword)
+{
+
+	for (int i = 0; i < librarians.size(); i++) {
+		Librarian* Librarian = librarians[i];
+
+		if (Librarian->Username == LoginUsername and Librarian->GetPassword() == LoginPassword)
+		{
+			return Librarian;
+		}
+	}
+	return nullptr;
 }
 
 void LibrarianLogin() 
 {
+	cout << CLEAR;
+	string LoginUsername;
 	string LoginPassword;
+	cout << "--Librarian Login--" << endl;
+	cout << "please enter username "; cin >> LoginUsername;
+	cin.ignore();
+	cout << "please enter password "; cin >> LoginPassword;
+	cin.ignore();
+
+	Librarian* librarian = getLibrarian(LoginUsername, LoginPassword);
+
+	if (librarian == nullptr)
+	{
+		cout << CLEAR;
+		cout << "Invalid username or password please try again" << endl;
+		//return;
+
+	}
+	else
+	{
+		MainSystem(librarian);
+
+	}
 
 
 }
@@ -636,10 +823,49 @@ void CreateAdminAcount()
 
 }
 
+Admin* getAdmin(string LoginUsername, string LoginPassword)
+{
+
+	for (int i = 0; i < admins.size(); i++) {
+		Admin* admin = admins[i];
+
+		if (admin->Username == LoginUsername and admin->GetPassword() == LoginPassword)
+		{
+			return admin;
+		}
+	}
+	return nullptr;
+}
+
 
 void AdminLogin() 
 {
+	cout << CLEAR;
+	string LoginUsername;
 	string LoginPassword;
+	cout << "--Admin Login--" << endl;
+	cout << "please enter username "; cin >> LoginUsername;
+	cout << "please enter password "; cin >> LoginPassword;
+
+
+
+	Admin* admin = getAdmin(LoginUsername, LoginPassword);
+
+	if (admin == nullptr)
+	{
+		cout << CLEAR;
+		cout << "Invalid username or password please try again" << endl;
+		//return;
+
+	}
+	else
+	{
+		cout << CLEAR;
+		MainSystem(admin);
+		
+
+
+	}
 
 }
 
@@ -647,43 +873,6 @@ void AdminLogin()
 //==========================================================================================
 
 
-void AccountCreation() 
-{
-	cout << CLEAR;
-	cout << "-Account type selection-" << endl;
-	cout << " which kind of account would you like to create" << endl;
-	cout << "1. Customer" << endl;
-	cout << "2. Librarian" << endl;
-	cout << "3. Admin" << endl;
-	cout << "4. Previous page" << endl;
-	cin >> AccountTypeChoice;
-	if (AccountTypeChoice == "1") 
-	{
-		CreateCustomerAccount();
-	}
-	else if (AccountTypeChoice == "2") 
-	{
-		CreateLibrarianAccount();
-
-	}
-	else if (AccountTypeChoice == "3") 
-	{
-		CreateAdminAcount();
-
-	}
-	else if (AccountTypeChoice == "4") 
-	{
-		
-		return;
-
-	}
-	else 
-	{
-		cout << CLEAR;
-		cout << "Please select a option" << endl;
-		AccountCreation();
-	}
-}
 
 
 void LogInType()
@@ -734,13 +923,14 @@ int main()
 	customers.push_back(customer);
 
 	Librarian* librarian = new Librarian();
-	librarian->Username = "harryknowls";
+	librarian-> Username = "harryknowls";
 	librarian-> SetPassword("pinkballthing"); //idk how tf to spell it
 	librarians.push_back(librarian);
 
 	Admin* admin = new Admin();
 	admin->Username = "elliot";
 	admin->SetPassword("pocketband");
+	admins.push_back(admin);
 
 	Books* book = new Books();
 	book->BookIDNumber = "1";
@@ -767,7 +957,7 @@ int main()
 		}
 		else if (LoginOrCreateAccount == "2")
 		{
-			AccountCreation();
+				CreateCustomerAccount();
 
 		}
 		else
