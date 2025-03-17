@@ -53,7 +53,7 @@ public:
 		}
 		void PrintReportInfo() 
 		{
-			cout << "BookTitle: " << BookTitle << ": :" << "Author: " << BookAuthor << ": :" << "ID Number: " << BookIDNumber << ": :" << RentedBy;
+			cout << "BookTitle: " << BookTitle << ": :" << "Author: " << BookAuthor << ": :" << "ID Number: " << BookIDNumber << ": :" << "currently borrowed by"<< ": :" << RentedBy;
 			if (borrowed == true)
 			{
 				cout << "Unavalable" << endl;
@@ -154,9 +154,7 @@ class Admin : public User
 //===================================================      VECTOR LIBRARIES      ===================================================      
 
 //===================================================       MAIN SYSTEM FUNCTIONS        ===================================================      
-std::vector<Customer*> customers;
-std::vector<Librarian*> librarians;
-std::vector<Admin*> admins;
+std::vector<User*> accounts;
 std::vector<Books*> books;
 
 Books* GetBookIDNumber(string IDNumber) 
@@ -183,10 +181,14 @@ void CreateBook()
 	string IDnum;
 	cout << "-- Book creation --" << endl;
 	cout << "please enter the title of the book you wish to add to the system ";cin >> Title;
-	cin.ignore();
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "please enter the Author of the book you wish to add to the system ";cin >> Author;
-	cin.ignore();
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "please enter a new ID number for this book ";cin >> IDnum;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	Books* Excisting = GetBookIDNumber(IDnum);
 	if (Excisting != nullptr)
 	{
@@ -205,6 +207,8 @@ void CreateBook()
 		
 		cout << "Book sucesfully created, press any button to return to admin screen" << endl;
 		cin >> choice;
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	}
 }
 
@@ -217,6 +221,8 @@ void UserInfo(User*user)
 	cout << "passowrd: " << user->GetPassword() << endl;
 	cout << " books currently borrowed: " << user->NumberOfBooksRented << endl;
 	cin >> choice;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	return;
 
 
@@ -246,6 +252,8 @@ void ReturnBooks(User* user)
 		string choice;
 		cout << "you have no borrowerd books so far" << endl;
 		cin >> choice;
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		return;
 
 	}
@@ -254,6 +262,8 @@ void ReturnBooks(User* user)
 	cout << "if you would like to returrn a book please enter its ID number" << endl;
 	cout << "if you would like to go back to the main screen please enter Back" << endl;
 	cin >> choice;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	
 	Books* book = GetBookIDNumber(choice);
 	if (book == nullptr) 
@@ -262,6 +272,8 @@ void ReturnBooks(User* user)
 		cout << CLEAR;
 		cout << "There is no book in our system with that ID number" << endl;
 		cin >> choice;
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		ReturnBooks(user);
 	}
 	else 
@@ -275,6 +287,8 @@ void ReturnBooks(User* user)
 			cout << "Book returned sucessfully" << endl;
 			cout << "press any key and enter to return to the main menu" << endl;
 			cin >> choice;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			return;
 		}
 		else 
@@ -282,6 +296,8 @@ void ReturnBooks(User* user)
 			string choice;
 			cout << "this ID number is for a book you have not currently borrowed, please try again" << endl;
 			cin >>choice;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			ReturnBooks(user);
 
 		}
@@ -299,6 +315,8 @@ void Borrow(Books* Books, User* User)
 	cout << "you currently have borrowed " << User->NumberOfBooksRented << " books" << endl;
 	cout << "press enter to return to the main logged in screen" << endl;
 	cin >> MainMenu;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	
 	
 	
@@ -353,6 +371,8 @@ void RentBook(User* user)
 		cout << "2. Book title" << endl;
 		cout << "3. Book author" << endl;
 		cin >> BookSearchMethod;
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 		if (BookSearchMethod == "1")
 		{
@@ -361,6 +381,8 @@ void RentBook(User* user)
 			cout << "--Book ID number search--" << endl;
 			cout << "Please enter book ID number" << endl;
 			cin >> IDnum;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 			Books* book = GetBookIDNumber(IDnum);
 			if (book == nullptr)
@@ -377,6 +399,8 @@ void RentBook(User* user)
 				cout << endl;
 				cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
 				cin >> choice;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				Books* bookchoice = GetBookIDNumber(choice);
 				if (bookchoice == nullptr)
 				{
@@ -384,6 +408,8 @@ void RentBook(User* user)
 					cout << CLEAR;
 					cout << "No book with this ID number is regesterd in our system, please try again";
 					cin >> barry;
+					cin.clear();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
 					
 				}
 				else if (book->borrowed == true)
@@ -391,6 +417,8 @@ void RentBook(User* user)
 					string barry;
 					cout << "sorry but " << book->BookTitle << " is currently unavalable, feel free to borrow other books in the mean time." << endl;
 					cin >> barry;
+					cin.clear();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				}
 				else
 				{
@@ -410,6 +438,8 @@ void RentBook(User* user)
 			cout << "--Book title search--" << endl;
 			cout << "Please enter book title" << endl;
 			cin >> BookTitle;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			//is case senative
 
 			Books* title = GetBookTitle(BookTitle);
@@ -419,6 +449,8 @@ void RentBook(User* user)
 				cout << CLEAR;
 				cout << "No book with this title is regestered in our system, please try again" << endl;
 				cin >> barry;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 			}
 			else if (title->borrowed == true)
@@ -426,6 +458,8 @@ void RentBook(User* user)
 				string barry;
 				cout << "sorry but " << title->BookTitle << " is currently unavalable, feel free to borrow other books in the mean time." << endl;
 				cin >> barry;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			}
 			else
 			{
@@ -436,6 +470,8 @@ void RentBook(User* user)
 				cout << endl;
 				cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
 				cin >> choice;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 				Books* title = GetBookTitle(choice);
 				if (title == nullptr)
@@ -444,6 +480,8 @@ void RentBook(User* user)
 					cout << CLEAR;
 					cout << "No book with this ID number is regesterd in our system, please try again";
 					cin >> barry;
+					cin.clear();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 				}
 				else
@@ -461,6 +499,8 @@ void RentBook(User* user)
 			cout << "--Book Author Search--" << endl;
 			cout << "Please enter Authors name" << endl;
 			cin >> BookAuthor;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 			Books* author = GetBookAuthor(BookAuthor);
 			if (author == nullptr)
@@ -469,6 +509,8 @@ void RentBook(User* user)
 				cout << CLEAR;
 				cout << "No book with this title is regestered in our system, please try again" << endl;
 				cin >> barry;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				
 
 			}
@@ -477,6 +519,8 @@ void RentBook(User* user)
 				string barry;
 				cout << "sorry but " << author->BookTitle << " is currently unavalable, feel free to borrow other books in the mean time." << endl;
 				cin >> barry;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			}
 			else
 			{
@@ -487,6 +531,8 @@ void RentBook(User* user)
 				cout << endl;
 				cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
 				cin >> choice;
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				Books* author = GetBookAuthor(choice);
 				if (author == nullptr)
 				{
@@ -507,20 +553,130 @@ void RentBook(User* user)
 
 	
 //====================================================================================================================================
-	void MannageAccounts() 
+	
+	User* getUserName(string choice)
 	{
+
+		for (int i = 0; i < accounts.size(); i++) {
+			User* account = (User*)accounts[i];
+
+			if (account->Username == choice)
+			{
+				return account;
+			}
+		}
+		return nullptr;
+	}
+
+
+	void RemoveBooks() 
+	{
+
+		string choice;
+		cout << "-- Book removal --" << endl;
+		cout << "Please enter the ID number you wish to remove" << endl;
+		cin >> choice;
+
+		Books* book = GetBookIDNumber(choice);
+		if (book == nullptr)
+		{
+			cout << "There is no book with this ID number in the system please try again" << endl;
+			RemoveBooks();
+
+		}
+		else
+		{
+			string choice;
+			auto it = find_if(books.begin(), books.end(), [book](Books* books) {return books == book; });
+			books.erase(it);
+			cout << "Book sucessfully removed" << endl;
+			cin >> choice;
+		}
 
 
 	}
-	void RemoveAccounts() 
-	{
 
+
+
+	void RemoveAccounts(User*user) 
+	{
+		string choice;
+		cout << "-- Account removal --" << endl;
+		cout << "Please enter the username of the account you wish to remove" << endl;
+		cin >> choice;
+
+		User* account = getUserName(choice);
+		if (account == nullptr) 
+		{
+			cout << "There is no account with this username in the system please try again" << endl;
+			RemoveAccounts(user);
+
+		}
+		else 
+		{
+			string choice;
+			auto it = find_if(accounts.begin(), accounts.end(), [account](User* user) {return user == account; });
+			accounts.erase(it);
+			cout << "account sucessfully deleted" << endl;
+			cin >> choice;
+		}
+	}
+	void CreateAccount(User*user) 
+	{
+		string choice;
+		cout << "-- Admin account creation --" << endl;
+		cout << "1. Create admin" << endl;
+		cout << "2. Create Librarian account" << endl;
+		cin >> choice;
+		if (choice == "1") 
+		{
+			cout << CLEAR;
+			cout << "-- Admin account creation--" << endl;
+
+		}
 
 	}
 	void GenerateReports() 
 	{
+		bool NoBooks = false;
+		cout << "--Book borrow report--" << endl;
+
+		for (int i = 0; i < books.size(); i++)
+		{
+			Books* Books = books[i];
+
+			if (Books->borrowed == true)
+			{
+				NoBooks = true;
+				Books->PrintReportInfo();
+
+				
+			}
 
 
+		}
+		if (NoBooks == false) 
+		{
+			string choice;
+			cout << CLEAR;
+			cout << "There are no books currently being borrowed" << endl;
+			cout << "press any key and enter to return to Librarian menu" << endl;
+			cin >> choice;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+
+		}
+		else 
+		{
+			string choice;
+			cout << "this is all currently borrowed books right now" << endl;
+			cout << "press any key and enter to return to Librarian menu" << endl;
+			cin >> choice;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
 	}
 
 
@@ -553,6 +709,8 @@ void MainSystem(User*user)
 			cout << "3. account information" << endl;
 			cout << "4. Log out" << endl;
 			cin >> option;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			if (option == "1")
 			{
 				cout << CLEAR;
@@ -600,7 +758,8 @@ void MainSystem(User*user)
 			cout << "3. generate report" << endl;
 			cout << "4. Log out" << endl;
 			cin >> choice;
-
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			if (choice == "1") 
 			{
 				cout << CLEAR;
@@ -612,12 +771,13 @@ void MainSystem(User*user)
 			else if (choice == "2") 
 			{
 				cout << CLEAR;
+				RemoveBooks();
 				MainSystem(user);
 			}
 			else if (choice == "3") 
 			{
 				cout << CLEAR;
-				GenerateReport();
+				GenerateReports();
 				MainSystem(user);
 					
 			}
@@ -633,32 +793,38 @@ void MainSystem(User*user)
 		{
 			string choice;
 			cout << "-- Admin main system --" << endl;
-			cout << "1. Manage accounts " << endl;
-			cout << "2. Create accounts " << endl;
+			cout << "1. Create accounts " << endl;
+			cout << "2. Remove accounts " << endl;
 			cout << "3. Log out" << endl;
 			cin >> choice;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 			if (choice == "1") 
 			{
 				cout << CLEAR;
-				MannageAccounts();
+				CreateAccount(user);
 				MainSystem(user);
 
+				
 			}
 			else if (choice == "2") 
 			{
+				
 				cout << CLEAR;
-				RemoveAccounts();
+				RemoveAccounts(user);
 				MainSystem(user);
 
 			}
 			else if (choice == "3") 
 			{
 				cout << CLEAR;
-				AdminAccount == false;
+				AdminAccount = false;
 				return;
 
+
 			}
+			
 
 		}
 	}
@@ -676,17 +842,23 @@ void CreateCustomerAccount()
 	cout << CLEAR;
 	cout << "--Customer account creation--" << endl;
 	cout << "Please enter username "; cin >> Username;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "please enter password "; cin >> Password;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	
 	Customer* customer = new Customer();
 	customer->Username = Username;
 	customer -> SetPassword(Password);
-	customers.push_back(customer);
+	accounts.push_back(customer);
 
 	cout << "user created" << endl;
 	cout << "1. Log in" << endl;
 	cout << "2. Create another account" << endl;
 	cin >> choice;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	if (choice == "1") 
 	{
 		cout << CLEAR;
@@ -699,15 +871,15 @@ void CreateCustomerAccount()
 }
 //=========================================================================
 
-Customer* getCustomer(string LoginUsername, string LoginPassword) 
+User* getUser(string LoginUsername, string LoginPassword) 
 {
 	
-	for (int i = 0; i < customers.size(); i++) {
-		Customer* Customer = customers[i];
+	for (int i = 0; i < accounts.size(); i++) {
+		User* account = (User*)accounts[i];
 
-		if (Customer->Username == LoginUsername and Customer->GetPassword()== LoginPassword)
+		if (account->Username == LoginUsername and account->GetPassword()== LoginPassword)
 		{
-			return Customer;
+			return account;
 		}
 	}
 	return nullptr;
@@ -716,20 +888,24 @@ Customer* getCustomer(string LoginUsername, string LoginPassword)
 
 
 
-void CustomerLogin()
+void UserLogin()
 {
 	cout << CLEAR;
 	string LoginUsername;
 	string LoginPassword;
-	cout << "--Customer Login--" << endl;
+	cout << "--User Login--" << endl;
 	cout << "please enter username "; cin >> LoginUsername;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "please enter password "; cin >> LoginPassword;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 	
 
-	Customer* customer = getCustomer(LoginUsername, LoginPassword);
+	User* account = getUser(LoginUsername, LoginPassword);
 
-	if (customer == nullptr) 
+	if (account == nullptr) 
 	{
 		cout << CLEAR;
 		cout << "Invalid username or password please try again" << endl;
@@ -739,9 +915,7 @@ void CustomerLogin()
 	else  
 	{
 		cout << CLEAR;
-		MainSystem(customer);
-		
-
+		MainSystem(account);
 	}
 
 
@@ -758,58 +932,21 @@ void CreateLibrarianAccount()
 	cout << CLEAR;
 	cout << "--Librarian account creation--" << endl;
 	cout << "Please enter username "; cin >> Username;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	cout << "please enter password "; cin >> Password;
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 	
 	Librarian* librarian = new Librarian();
 	librarian->Username = Username;
 	librarian -> SetPassword(Password);
-	librarians.push_back(librarian);
+	accounts.push_back(librarian);
 
 	cout << "user created" << endl;
 	cin >> choice;
-
-}
-
-Librarian* getLibrarian(string LoginUsername, string LoginPassword)
-{
-
-	for (int i = 0; i < librarians.size(); i++) {
-		Librarian* Librarian = librarians[i];
-
-		if (Librarian->Username == LoginUsername and Librarian->GetPassword() == LoginPassword)
-		{
-			return Librarian;
-		}
-	}
-	return nullptr;
-}
-
-void LibrarianLogin() 
-{
-	cout << CLEAR;
-	string LoginUsername;
-	string LoginPassword;
-	cout << "--Librarian Login--" << endl;
-	cout << "please enter username "; cin >> LoginUsername;
-	cin.ignore();
-	cout << "please enter password "; cin >> LoginPassword;
-	cin.ignore();
-
-	Librarian* librarian = getLibrarian(LoginUsername, LoginPassword);
-
-	if (librarian == nullptr)
-	{
-		cout << CLEAR;
-		cout << "Invalid username or password please try again" << endl;
-		//return;
-
-	}
-	else
-	{
-		MainSystem(librarian);
-
-	}
-
+	cin.clear();
+	cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
 }
 
@@ -823,93 +960,6 @@ void CreateAdminAcount()
 
 }
 
-Admin* getAdmin(string LoginUsername, string LoginPassword)
-{
-
-	for (int i = 0; i < admins.size(); i++) {
-		Admin* admin = admins[i];
-
-		if (admin->Username == LoginUsername and admin->GetPassword() == LoginPassword)
-		{
-			return admin;
-		}
-	}
-	return nullptr;
-}
-
-
-void AdminLogin() 
-{
-	cout << CLEAR;
-	string LoginUsername;
-	string LoginPassword;
-	cout << "--Admin Login--" << endl;
-	cout << "please enter username "; cin >> LoginUsername;
-	cout << "please enter password "; cin >> LoginPassword;
-
-
-
-	Admin* admin = getAdmin(LoginUsername, LoginPassword);
-
-	if (admin == nullptr)
-	{
-		cout << CLEAR;
-		cout << "Invalid username or password please try again" << endl;
-		//return;
-
-	}
-	else
-	{
-		cout << CLEAR;
-		MainSystem(admin);
-		
-
-
-	}
-
-}
-
-
-//==========================================================================================
-
-
-
-
-void LogInType()
-{
-	cout << CLEAR;
-	cout << "-What kind of account would you like to log into?-" << endl;
-	cout << "1.Customer" << endl;
-	cout << "2.Librarian" << endl;
-	cout << "3.Admin" << endl;
-	cout << "please select a option "; cin >> AccountLoginType;
-	if (AccountLoginType == "1") 
-	{
-		CustomerLogin();
-
-	}
-	else if (AccountLoginType == "2")
-	{
-		LibrarianLogin();
-	}
-	else if (AccountLoginType == "3")
-	{
-		AdminLogin();
-	} 
-
-	else 
-	{
-		cout << CLEAR;
-		cout << "please choose a given option" << endl;
-		LogInType();
-
-	}
-	
-}
-
-
-//==============================================================================
-
 
 int main() 
 
@@ -920,17 +970,17 @@ int main()
 	Customer* customer = new Customer();
 	customer -> Username = "seanItaly";
 	customer -> SetPassword("pastasanwich");
-	customers.push_back(customer);
+	accounts.push_back(customer);
 
 	Librarian* librarian = new Librarian();
 	librarian-> Username = "harryknowls";
 	librarian-> SetPassword("pinkballthing"); //idk how tf to spell it
-	librarians.push_back(librarian);
+	accounts.push_back(librarian);
 
 	Admin* admin = new Admin();
 	admin->Username = "elliot";
 	admin->SetPassword("pocketband");
-	admins.push_back(admin);
+	accounts.push_back(admin);
 
 	Books* book = new Books();
 	book->BookIDNumber = "1";
@@ -947,13 +997,15 @@ int main()
 		cout << "dont have a account? create one here" << endl;
 		cout << "options" << endl;
 		cout << "1.log in" << endl;
-		cout << "2.create account" << endl;
+		cout << "2.create customer account" << endl;
 		cout << "which option would you like to choose? "<< endl; 
 		cout << "(type the number corosponding to the option)";
 		cin >> LoginOrCreateAccount;
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 			if (LoginOrCreateAccount == "1")
 		{
-			LogInType();
+				UserLogin();
 		}
 		else if (LoginOrCreateAccount == "2")
 		{
@@ -969,12 +1021,4 @@ int main()
 	}
 }
 
-/*cout << "please enter Username " << endl;
-	cin >> Username ;
-	cout << "Please enter Password" << endl;
-	cin >> Password;
-    cout << CLEAR;
-	cout << Username << endl;
-	cout << Password << endl;
-	cout << "nearly there" << endl;
-	cin;*/
+
