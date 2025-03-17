@@ -612,6 +612,14 @@ void RentBook(User* user)
 			RemoveAccounts(user);
 
 		}
+		else if (user->Username == choice) 
+		{
+			cout << CLEAR;
+			cout << "A Admin cannout delete there own account" << endl;
+			RemoveAccounts(user);
+
+
+		}
 		else 
 		{
 			string choice;
