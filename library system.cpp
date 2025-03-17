@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <ctime>
+#include <list>
 
 using namespace std;
 
@@ -37,14 +38,18 @@ public:
 			cout << "BookTitle: " << BookTitle << ": :" << "Author: " << BookAuthor << ": :" <<"ID Number: " << BookIDNumber << ": :";
 			if (borrowed or reserved == true) 
 			{
-				cout << "Unavalable for rental" << endl;
+				cout << "Unavalable" << endl;
 
 			}
 			else 
 			{
-				cout << "Avalable for rental"<< endl;
+				cout << "Avalable"<< endl;
 			}
+
 		}
+		
+
+
 };
 
 void CreateBook() 
@@ -64,8 +69,10 @@ protected:
 string Password;
 
 public:
+
 	string Username;
 	bool Active = false;
+	int NumberOfBooksRented = 0;
 	
 	virtual int getType() = 0;
 
@@ -89,6 +96,7 @@ class Customer : public User
 		int getType() {
 			return 1;
 		}
+		
 	
 };
 
@@ -125,7 +133,7 @@ class Admin : public User
 
 	void MannageAccouts() 
 	{
-
+		
 
 	}
 
@@ -140,13 +148,17 @@ std::vector<Books*> books;
 
 //===================================================       MAIN SYSTEM FUNCTIONS        ===================================================      
 
-void Borrow(Books* Books, User* User)
+
+void UserInfo(User*user) 
 {
-	cout << "--Book Rental finalization--";
-	string bob;
-	cout << "BEANZ";
-	cout << User->Username;
-	cin >> bob;
+	string choice;
+	cout << CLEAR;
+	cout << "-- User Info --" << endl;
+	cout << "username: " << user->Username << endl;
+	cout << "passowrd: " << user->GetPassword() << endl;
+	cout << " books currently borrowed: " << user->NumberOfBooksRented << endl;
+	cin >> choice;
+	return;
 
 
 }
@@ -166,6 +178,88 @@ Books* GetBookIDNumber(string IDNumber)
 	}
 	return nullptr;
 }
+
+void ReturnBooks(User* user) 
+{
+	cout << CLEAR;
+	bool FoundBook = false;
+	for (int i = 0; i < books.size(); i++) 
+	{
+		Books* book = books[i];
+
+		if (book->RentedBy == user->Username) 
+		{
+			book->PrintInfo();
+			cout << endl;
+			FoundBook = true;
+		}
+		
+	}
+	if (FoundBook == false) 
+	{
+		string choice;
+		cout << "you have no borrowerd books so far" << endl;
+		cin >> choice;
+		return;
+
+	}
+
+	string choice;
+	cout << "if you would like to returrn a book please enter its ID number" << endl;
+	cout << "if you would like to go back to the main screen please enter Back" << endl;
+	cin >> choice;
+	
+	Books* book = GetBookIDNumber(choice);
+	if (book == nullptr) 
+	{
+		string choice;
+		cout << CLEAR;
+		cout << "There is no book in our system with that ID number" << endl;
+		cin >> choice;
+		ReturnBooks(user);
+	}
+	else 
+	{
+		if (book->RentedBy == user->Username)
+		{
+			string choice;
+			user->NumberOfBooksRented--;
+			book->RentedBy = "none";
+			book->borrowed = false;
+			cout << "Book returned sucessfully" << endl;
+			cout << "press any key and enter to return to the main menu" << endl;
+			cin >> choice;
+			return;
+		}
+		else 
+		{
+			string choice;
+			cout << "this ID number is for a book you have not currently borrowed, please try again" << endl;
+			cin >>choice;
+			ReturnBooks(user);
+
+		}
+	}
+}
+
+void Borrow(Books* Books, User* User)
+{
+	User->NumberOfBooksRented ++;
+	Books->RentedBy = User->Username;
+	Books->borrowed = true;
+	string MainMenu;
+	cout << "--Finalaized borrowing--" << endl;
+	cout << "your request to borrow " << Books->BookTitle << " has been sucessful" << endl;
+	cout << "you currently have borrowed " << User->NumberOfBooksRented << " books" << endl;
+	cout << "press enter to return to the main logged in screen" << endl;
+	cin >> MainMenu;
+	
+	
+	
+
+}
+
+
 
 Books* GetBookTitle(string BookTitle) 
 {
@@ -203,215 +297,236 @@ Books* GetBookAuthor(string BookAuthor)
 }
 
 
-void RentBook(User*user) 
-{
-	string BookSearchMethod;
-	
-	cout << "--Book rental--" << endl;
-	cout << "How would you like to seach for your book" << endl;
-	cout << "1. ID number" << endl;
-	cout << "2. Book title" << endl;
-	cout << "3. Book author" << endl;
-	cin  >> BookSearchMethod;
-
-	if (BookSearchMethod == "1")
+void RentBook(User* user)
 	{
-		string IDnum;
-		cout << CLEAR;
-		cout << "--Book ID number search--" << endl;
-		cout << "Please enter book ID number" << endl;
-		cin >> IDnum;
+		string BookSearchMethod;
 
-		Books* book = GetBookIDNumber(IDnum);
-		if (book == nullptr)
+		cout << "--Book rental--" << endl;
+		cout << "How would you like to seach for your book" << endl;
+		cout << "1. ID number" << endl;
+		cout << "2. Book title" << endl;
+		cout << "3. Book author" << endl;
+		cin >> BookSearchMethod;
+
+		if (BookSearchMethod == "1")
 		{
+			string IDnum;
 			cout << CLEAR;
-			cout << "No book with this ID number is regesterd in our system, please try again";
-			RentBook(user);
+			cout << "--Book ID number search--" << endl;
+			cout << "Please enter book ID number" << endl;
+			cin >> IDnum;
 
-
-		}
-		else
-		{
-			string choice;
-			cout << "Books found with matching data" << endl;
-			cout << endl;
-			book->PrintInfo();
-			cout << endl;
-			cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
-			cin >> choice;
-			Books* bookchoice = GetBookIDNumber(choice);
-			if (bookchoice == nullptr) 
+			Books* book = GetBookIDNumber(IDnum);
+			if (book == nullptr)
 			{
 				cout << CLEAR;
 				cout << "No book with this ID number is regesterd in our system, please try again";
-				RentBook(user);
-			}
-			else 
-			{
-				cout << CLEAR;
-				Borrow(bookchoice,user);
-
-			}
-			
-		}
-
-	}
-	else if (BookSearchMethod == "2")
-	{
-		string BookTitle;
-		cout << CLEAR;
-		cout << "--Book title search--" << endl;
-		cout << "Please enter book title" << endl;
-		cin >> BookTitle;
-		//is case senative
-		
-		Books* title = GetBookTitle(BookTitle);
-		if (title == nullptr) 
-		{
-			cout << CLEAR;
-			cout << "No book with this title is regestered in our system, please try again" << endl;
-			RentBook(user);
-
-		}
-		else 
-		{
-			string choice;
-			cout << "Books found with a matching title" << endl;
-			cout << endl;
-			title->PrintInfo();
-			cout << endl;
-			cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
-			cin >> choice;
-
-			Books* title = GetBookTitle(choice);
-			if (title == nullptr) 
-			{
-				cout << CLEAR;
-				cout << "No book with this ID number is regesterd in our system, please try again";
-				RentBook(user);
-
 			}
 			else
 			{
-				cout << CLEAR;
-				Borrow(title,user);
+				string choice;
+				cout << "Books found with matching data" << endl;
+				cout << endl;
+				book->PrintInfo();
+				cout << endl;
+				cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
+				cin >> choice;
+				Books* bookchoice = GetBookIDNumber(choice);
+				if (bookchoice == nullptr)
+				{
+					string barry;
+					cout << CLEAR;
+					cout << "No book with this ID number is regesterd in our system, please try again";
+					cin >> barry;
+					
+				}
+				else if (book->borrowed == true)
+				{
+					string barry;
+					cout << "sorry but " << book->BookTitle << " is currently unavalable, feel free to borrow other books in the mean time." << endl;
+					cin >> barry;
+				}
+				else
+				{
+					cout << CLEAR;
+					Borrow(bookchoice, user);
+
+
+				}
 
 			}
+
 		}
-	}
-	else if(BookSearchMethod == "3")
-	{
-		string BookAuthor;
-		cout << CLEAR;
-		cout << "--Book Author Search--" << endl;
-		cout << "Please enter Authors name" << endl;
-		cin >> BookAuthor;
-
-		Books* author = GetBookAuthor(BookAuthor);
-		if (author == nullptr)
+		else if (BookSearchMethod == "2")
 		{
+			string BookTitle;
 			cout << CLEAR;
-			cout << "No book with this title is regestered in our system, please try again" << endl;
-			RentBook(user);
+			cout << "--Book title search--" << endl;
+			cout << "Please enter book title" << endl;
+			cin >> BookTitle;
+			//is case senative
 
+			Books* title = GetBookTitle(BookTitle);
+			if (title == nullptr)
+			{
+				string barry;
+				cout << CLEAR;
+				cout << "No book with this title is regestered in our system, please try again" << endl;
+				cin >> barry;
+
+			}
+			else if (title->borrowed == true)
+			{
+				string barry;
+				cout << "sorry but " << title->BookTitle << " is currently unavalable, feel free to borrow other books in the mean time." << endl;
+				cin >> barry;
+			}
+			else
+			{
+				string choice;
+				cout << "Books found with a matching title" << endl;
+				cout << endl;
+				title->PrintInfo();
+				cout << endl;
+				cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
+				cin >> choice;
+
+				Books* title = GetBookTitle(choice);
+				if (title == nullptr)
+				{
+					string barry;
+					cout << CLEAR;
+					cout << "No book with this ID number is regesterd in our system, please try again";
+					cin >> barry;
+
+				}
+				else
+				{
+					cout << CLEAR;
+					Borrow(title, user);
+
+				}
+			}
+		}
+		else if (BookSearchMethod == "3")
+		{
+			string BookAuthor;
+			cout << CLEAR;
+			cout << "--Book Author Search--" << endl;
+			cout << "Please enter Authors name" << endl;
+			cin >> BookAuthor;
+
+			Books* author = GetBookAuthor(BookAuthor);
+			if (author == nullptr)
+			{
+				string barry;
+				cout << CLEAR;
+				cout << "No book with this title is regestered in our system, please try again" << endl;
+				cin >> barry;
+				
+
+			}
+			else if (author->borrowed == true)
+			{
+				string barry;
+				cout << "sorry but " << author->BookTitle << " is currently unavalable, feel free to borrow other books in the mean time." << endl;
+				cin >> barry;
+			}
+			else
+			{
+				string choice;
+				cout << "Books found with a matching title" << endl;
+				cout << endl;
+				author->PrintInfo();
+				cout << endl;
+				cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
+				cin >> choice;
+				Books* author = GetBookAuthor(choice);
+				if (author == nullptr)
+				{
+					cout << CLEAR;
+					cout << "No book with this title is regestered in our system, please try again" << endl;
+					Borrow(author, user);
+				}
+
+			}
 		}
 		else
 		{
-			string choice;
-			cout << "Books found with a matching title" << endl;
-			cout << endl;
-			author->PrintInfo();
-			cout << endl;
-			cout << "if you wish to rent one of these books and it is avalable please enter its ID number" << endl;
-			cin >> choice;
-			Books* author = GetBookAuthor(choice);
-			if (author == nullptr) 
-			{
-				cout << CLEAR;
-				cout << "No book with this title is regestered in our system, please try again" << endl;
-				Borrow(author,user);
-
-			}
-
+			cout << CLEAR;
+			cout << "Please choose a give option" << endl;
 		}
+
+	}
+
 	
-
-
-	}
-	else
-	{
-		cout << CLEAR;
-		cout << "Please choose a give option" << endl;
-		RentBook(user);
-	}
-
-}
-
 //====================================================================================================================================
 
 
 
 void MainSystem(User*user) 
 {
-	string beanz;
-	//cout << CLEAR;
-	if (user->getType() == 1) 
+	while (true) 
 	{
-		CustomerAccount = true;
-	}
-	else if (user->getType() == 2) 
-	{
-		LibrarianAccount = true;
-	}
-	else if (user->getType() == 3) 
-	{
-		AdminAccount = true;
-	}
-
-	if (CustomerAccount == true) 
-	{
-		string option;
-		
-
-
-		cout << CLEAR;
-		cout << "--Main System--" << endl;
-		cout << "1. Rent book" << endl;
-		cout << "2. Reserve book" << endl;
-		cout << "3. Return book" << endl;
-		cout << "4. Log out" << endl;
-		cin >> option;
-		if (option == "1")
+		string beanz;
+		//cout << CLEAR;
+		if (user->getType() == 1)
 		{
+			CustomerAccount = true;
+		}
+		else if (user->getType() == 2)
+		{
+			LibrarianAccount = true;
+		}
+		else if (user->getType() == 3)
+		{
+			AdminAccount = true;
+		}
+
+		if (CustomerAccount == true)
+		{
+			string option;
+
+
+
 			cout << CLEAR;
-			RentBook(user);
-			
+			cout << "--Main System--" << endl;
+			cout << "1. Rent book" << endl;
+			cout << "2. Return book" << endl;
+			cout << "3. account information" << endl;
+			cout << "4. Log out" << endl;
+			cin >> option;
+			if (option == "1")
+			{
+				cout << CLEAR;
+				RentBook(user);
+
+
+			}
+			else if (option == "2")
+			{
+				ReturnBooks(user);
+
+			}
+			else if (option == "3")
+			{
+				UserInfo(user);
+
+			}
+			else if (option == "4")
+			{
+
+				return;
+			}
+			else
+			{
+
+
+			}
 
 		}
-		else if (option == "2") 
-		{
 
-
-		}
-		else if (option == "3") 
-		{
-
-
-		}
-		else if (option == "4") 
-		{
-
-
-		}
-		else 
-		{
-			
-
-		}
-		return;
 	}
-
 }
 
 
@@ -659,7 +774,6 @@ int main()
 		{
 			cout << CLEAR;
 			cout << "Please choose a given option" << endl;
-			main();
 		}
 
 	}
