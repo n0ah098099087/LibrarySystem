@@ -126,13 +126,6 @@ class Librarian : public User
 		int getType() {
 			return 2;
 		}
-
-	void ManageRequests() 
-	{
-
-
-	}
-
 };
 
 
@@ -140,15 +133,10 @@ class Librarian : public User
 
 class Admin : public User 
 {
-
-
     public:
 		int getType() {
 			return 3;
 		}
-
-	
-
 };
 
 //===================================================      VECTOR LIBRARIES      ===================================================      
