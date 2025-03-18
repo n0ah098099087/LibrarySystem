@@ -410,8 +410,15 @@ void RentBook(User* user)
 					cin >> barry;
 					cin.clear();
 					cin.ignore(numeric_limits<streamsize>::max(), '\n');
-					
+
 				}
+				else if (user->NumberOfBooksRented >= 5) 
+				{
+
+
+
+				}
+		
 				else if (book->borrowed == true)
 				{
 					string barry;
@@ -638,9 +645,45 @@ void RentBook(User* user)
 		cin >> choice;
 		if (choice == "1") 
 		{
+			string username;
+			string password;
 			cout << CLEAR;
 			cout << "-- Admin account creation--" << endl;
+			cout << "please enter username for the new account";
+			cin >> username;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "please enter password for the new account" << endl;
+			cin >> password;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
+			Admin* admin = new Admin();
+			admin->Username = username;
+			admin->SetPassword(password);
+			accounts.push_back(admin);
+			cout << "account created" << endl;
+		}
+		else if(choice == "2")
+		{
+			string username;
+			string password;
+			cout << CLEAR;
+			cout << "-- Librarian account Creation" << endl;
+			cout << "please enter username for the new account"; 
+			cin >> username;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "please enter password for the new account" << endl;
+			cin >> password;
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+			Librarian* librarian = new Librarian();
+			librarian->Username = username;
+			librarian->SetPassword(password); 
+			accounts.push_back(librarian);
+			cout << "accout created" << endl;
 		}
 
 	}
@@ -960,13 +1003,6 @@ void CreateLibrarianAccount()
 
 
 //========================================================================================
-
-
-void CreateAdminAcount() 
-{
-
-
-}
 
 
 int main() 
