@@ -551,16 +551,18 @@ void RentBook(User* user)
 	
 	User* getUserName(string choice)
 	{
-
+		//searches through the accounts vectore for a account with the same username as the inputted username
 		for (int i = 0; i < accounts.size(); i++) {
 			User* account = (User*)accounts[i];
 
 			if (account->Username == choice)
 			{
 				return account;
+				// returns to the previous function with a arbitrary value 
 			}
 		}
 		return nullptr;
+		// returns to the previuous function with a null pointer value
 	}
 
 
@@ -571,12 +573,14 @@ void RentBook(User* user)
 		cout << "-- Book removal --" << endl;
 		cout << "Please enter the ID number you wish to remove" << endl;
 		cin >> choice;
+		//gets uer intput to seach for a ID number
 
 		Books* book = GetBookIDNumber(choice);
 		if (book == nullptr)
 		{
 			cout << "There is no book with this ID number in the system please try again" << endl;
 			RemoveBooks();
+			//returns a error message if there is no book with the same ID number
 
 		}
 		else
@@ -586,6 +590,7 @@ void RentBook(User* user)
 			books.erase(it);
 			cout << "Book sucessfully removed" << endl;
 			cin >> choice;
+			// removes the book memory and where it is storred from the system
 		}
 
 
@@ -599,12 +604,13 @@ void RentBook(User* user)
 		cout << "-- Account removal --" << endl;
 		cout << "Please enter the username of the account you wish to remove" << endl;
 		cin >> choice;
-
+		// searches the username vectore for a class with a username that matches the input
 		User* account = getUserName(choice);
 		if (account == nullptr) 
 		{
 			cout << "There is no account with this username in the system please try again" << endl;
 			RemoveAccounts(user);
+			// returns a error message
 
 		}
 		else if (user->Username == choice) 
@@ -612,7 +618,7 @@ void RentBook(User* user)
 			cout << CLEAR;
 			cout << "A Admin cannout delete there own account" << endl;
 			RemoveAccounts(user);
-
+			// returns error message if thr user trys to delete there own account
 
 		}
 		else 
@@ -724,7 +730,6 @@ void MainSystem(User*user)
 	while (true) 
 	{
 		string beanz;
-		//cout << CLEAR;
 		if (user->getType() == 1)
 		{
 			CustomerAccount = true;
@@ -1000,18 +1005,18 @@ int main()
 
 
 	Customer* customer = new Customer();
-	customer -> Username = "seanItaly";
-	customer -> SetPassword("pastasanwich");
+	customer -> Username = "user1";
+	customer -> SetPassword("password");
 	accounts.push_back(customer);
 
 	Librarian* librarian = new Librarian();
-	librarian-> Username = "harryknowls";
-	librarian-> SetPassword("pinkballthing"); //idk how tf to spell it
+	librarian-> Username = "librarian1";
+	librarian-> SetPassword("book"); 
 	accounts.push_back(librarian);
 
 	Admin* admin = new Admin();
-	admin->Username = "elliot";
-	admin->SetPassword("pocketband");
+	admin->Username = "admin1";
+	admin->SetPassword("12345");
 	accounts.push_back(admin);
 
 	Books* book = new Books();
